@@ -55,6 +55,7 @@ source "amazon-ebssurrogate" "macami" {
 
   aws_polling {
     max_attempts = 240
+    delay_seconds = 60
   }
 
   vpc_filter {
