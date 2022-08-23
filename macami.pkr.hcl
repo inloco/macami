@@ -95,19 +95,19 @@ source "amazon-ebssurrogate" "macami" {
   }
 
   launch_block_device_mappings {
+    delete_on_termination = true
     device_name           = "/dev/xvdf"
     snapshot_id           = data.amazon-ami.macos12.block_device_mappings[0].snapshot_id
-    volume_size           = 60
-    volume_type           = "gp2"
-    delete_on_termination = true
+    volume_size           = data.amazon-ami.macos12.block_device_mappings[0].volume_size
+    volume_type           = data.amazon-ami.macos12.block_device_mappings[0].volume_type
   }
 
   ami_root_device {
-    device_name           = "/dev/sda1"
-    source_device_name    = "/dev/xvdf"
-    volume_size           = 60
-    volume_type           = "gp2"
     delete_on_termination = true
+    source_device_name    = "/dev/xvdf"
+    device_name           = data.amazon-ami.macos12.block_device_mappings[0].device_name
+    volume_size           = data.amazon-ami.macos12.block_device_mappings[0].volume_size
+    volume_type           = data.amazon-ami.macos12.block_device_mappings[0].volume_type
   }
 }
 
