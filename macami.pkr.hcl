@@ -16,7 +16,7 @@ variable "aws_region" {
   }
 }
 
-data "amazon-ami" "macos11" {
+data "amazon-ami" "macos12" {
   most_recent = true
 
   owners = [
@@ -25,7 +25,7 @@ data "amazon-ami" "macos11" {
 
   filters = {
     architecture        = "x86_64_mac"
-    name                = "amzn-ec2-macos-11.*"
+    name                = "amzn-ec2-macos-12.*"
     root-device-type    = "ebs"
     virtualization-type = "hvm"
   }
@@ -34,7 +34,7 @@ data "amazon-ami" "macos11" {
 source "amazon-ebssurrogate" "macami" {
   availability_zone             = "${var.aws_region}a"
   ami_architecture              = "x86_64_mac"
-  ami_name                      = data.amazon-ami.macos11.name
+  ami_name                      = data.amazon-ami.macos12.name
   ami_virtualization_type       = "hvm"
   decode_authorization_messages = true
   ebs_optimized                 = true
@@ -95,7 +95,7 @@ source "amazon-ebssurrogate" "macami" {
 
   launch_block_device_mappings {
     device_name           = "/dev/xvdf"
-    snapshot_id           = data.amazon-ami.macos11.block_device_mappings[0].snapshot_id
+    snapshot_id           = data.amazon-ami.macos12.block_device_mappings[0].snapshot_id
     volume_size           = 60
     volume_type           = "gp2"
     delete_on_termination = true
