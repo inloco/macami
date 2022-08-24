@@ -98,7 +98,7 @@ source "amazon-ebssurrogate" "macami" {
     delete_on_termination = true
     device_name           = "/dev/xvdf"
     snapshot_id           = data.amazon-ami.macos12.block_device_mappings[0].snapshot_id
-    volume_size           = data.amazon-ami.macos12.block_device_mappings[0].volume_size
+    volume_size           = 100 # TODO: get size from device mapping
     volume_type           = data.amazon-ami.macos12.block_device_mappings[0].volume_type
   }
 
@@ -106,7 +106,7 @@ source "amazon-ebssurrogate" "macami" {
     delete_on_termination = true
     source_device_name    = "/dev/xvdf"
     device_name           = data.amazon-ami.macos12.block_device_mappings[0].device_name
-    volume_size           = data.amazon-ami.macos12.block_device_mappings[0].volume_size
+    volume_size           = 100 # TODO: get size from device mapping
     volume_type           = data.amazon-ami.macos12.block_device_mappings[0].volume_type
   }
 }
