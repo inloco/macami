@@ -14,9 +14,9 @@ unzip ./HEAD.zip
 rm ./HEAD.zip
 cp ./aws-ec2-instance-connect-config-*/src/bin/* "${AWSBINVOL}"
 
-SSHDCONF="${VOLBASE}/private/etc/ssh/sshd_config"
-sed -ri "s|#(AuthorizedKeysCommand) .+|\\1 ${AWSBIN}/eic_run_authorized_keys %u %f|g" "${SSHDCONF}"
-sed -ri 's/#(AuthorizedKeysCommandUser) .+/\1 ec2-instance-connect/g' "${SSHDCONF}"
+SSHDCONF="${VOLBASE}/private/etc/ssh/sshd_config.d/075-aws-eic.conf"
+echo "AuthorizedKeysCommand ${AWSBIN}/eic_run_authorized_keys %u %f" >> "${SSHDCONF}"
+echo 'AuthorizedKeysCommandUser ec2-instance-connect' >> "${SSHDCONF}"
 
 python3 << EOF
 import plistlib
