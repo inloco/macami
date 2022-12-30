@@ -1,8 +1,10 @@
 packer {
+  required_version = "= v1.8.5-incognia.2"
+
   required_plugins {
     amazon = {
       source  = "github.com/inloco/amazon"
-      version = "= 1.0.4-incognia.2"
+      version = "= 1.1.6-incognia.2"
     }
   }
 }
@@ -43,15 +45,12 @@ source "amazon-ebssurrogate" "macami" {
   force_deregister              = true
   iam_instance_profile          = "AmazonSSMRoleForInstancesQuickSetup"
   instance_type                 = "t3a.nano"
+  pause_before_ssm              = "2m"
   region                        = var.aws_region
   shutdown_behavior             = "terminate"
   ssh_agent_auth                = true
-  ssh_interface                 = "private_dns"
+  ssh_interface                 = "session_manager"
   ssh_username                  = "ec2-user"
-  ssh_bastion_agent_auth        = true
-  ssh_bastion_host              = "localhost"
-  ssh_bastion_port              = 2222
-  ssh_bastion_username          = "ec2-user"
 
   aws_polling {
     max_attempts = 240
@@ -98,7 +97,7 @@ source "amazon-ebssurrogate" "macami" {
     delete_on_termination = true
     device_name           = "/dev/xvdf"
     snapshot_id           = data.amazon-ami.macos12.block_device_mappings[0].snapshot_id
-    volume_size           = 100 # TODO: get size from device mapping
+    volume_size           = data.amazon-ami.macos12.block_device_mappings[0].volume_size
     volume_type           = data.amazon-ami.macos12.block_device_mappings[0].volume_type
   }
 
@@ -106,7 +105,7 @@ source "amazon-ebssurrogate" "macami" {
     delete_on_termination = true
     source_device_name    = "/dev/xvdf"
     device_name           = data.amazon-ami.macos12.block_device_mappings[0].device_name
-    volume_size           = 100 # TODO: get size from device mapping
+    volume_size           = data.amazon-ami.macos12.block_device_mappings[0].volume_size
     volume_type           = data.amazon-ami.macos12.block_device_mappings[0].volume_type
   }
 }
