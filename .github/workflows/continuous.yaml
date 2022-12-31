@@ -1,0 +1,52 @@
+name: Continuous
+on:
+  push:
+    branches:
+      - master
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  all:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+      PACKER_GITHUB_API_TOKEN: ${{ github.token }}
+      PACKER_LOG: '1'
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      - name: build and install packer
+        run: |
+          cd "$(mktemp -d)"
+          go mod init example.com/m
+          go mod edit -replace github.com/hashicorp/packer=github.com/inloco/packer@v1.8.5-incognia.2
+          go get -u -v -x github.com/hashicorp/packer
+          cd "$(go env GOMODCACHE)/github.com/inloco/packer@v1.8.5-incognia.2"
+          go install -v -x
+      - name: install and setup session-manager-plugin
+        run: |
+          export SMP_PACKAGE=session-manager-plugin
+          export SMP_VERSION=latest
+          curl -sSLfo "/tmp/${SMP_PACKAGE}.deb" "https://s3.amazonaws.com/session-manager-downloads/plugin/${SMP_VERSION}/ubuntu_64bit/${SMP_PACKAGE}.deb"
+          sudo apt-get install -y "/tmp/${SMP_PACKAGE}.deb"
+      - name: setup openssh-client
+        run: |
+          eval "$(ssh-agent)"
+          echo "SSH_AGENT_PID=${SSH_AGENT_PID}" >> "${GITHUB_ENV}"
+          echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" >> "${GITHUB_ENV}"
+          yes '' | ssh-keygen -N ''
+          ssh-add
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-duration-seconds: 21600
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/packer
+      - name: make all
+        run: make
