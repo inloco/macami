@@ -1,9 +1,9 @@
-RST := $(shell tput sgr0)
-BLD := $(shell tput bold)
-RED := $(shell tput setaf 1)
-GRN := $(shell tput setaf 2)
-YLW := $(shell tput setaf 3)
-BLU := $(shell tput setaf 4)
+RST := \033[m
+BLD := \033[1m
+RED := \033[31m
+GRN := \033[32m
+YLW := \033[33m
+BLU := \033[34m
 EOL := \n
 
 all: ami
