@@ -12,8 +12,8 @@ all: ami
 
 ami:
 	@printf '${BLD}${RED}make: *** [$@]${RST}${EOL}'
-	@printf '${BLD}${YLW}$$${RST} '
-	packer init -upgrade .
+	# @printf '${BLD}${YLW}$$${RST} '
+	# packer init -upgrade .
 	@printf '${BLD}${YLW}$$${RST} '
 	packer build macami.pkr.hcl
 .PHONY: ami
