@@ -3,7 +3,7 @@ packer {
 
   required_plugins {
     amazon = {
-      source  = "github.com/inloco/amazon"
+      source  = "github.com/inloco/packer-plugin-amazon"
       version = "= 1.3.2-incognia.1"
     }
   }
