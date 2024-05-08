@@ -20,14 +20,14 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.18'
+          go-version: '1.21'
       - name: build and install packer
         run: |
           cd "$(mktemp -d)"
           go mod init example.com/m
-          go mod edit -replace github.com/hashicorp/packer=github.com/inloco/packer@v1.8.5-incognia.2
+          go mod edit -replace github.com/hashicorp/packer=github.com/inloco/packer@v1.10.3-incognia.1
           go get -u -v -x github.com/hashicorp/packer
-          cd "$(go env GOMODCACHE)/github.com/inloco/packer@v1.8.5-incognia.2"
+          cd "$(go env GOMODCACHE)/github.com/inloco/packer@v1.10.3-incognia.1"
           go install -v -x
       - name: install and setup session-manager-plugin
         run: |

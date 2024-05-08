@@ -1,10 +1,10 @@
 packer {
-  required_version = "= v1.8.5-incognia.2"
+  required_version = "= v1.10.3-incognia.1"
 
   required_plugins {
     amazon = {
       source  = "github.com/inloco/amazon"
-      version = "= 1.1.6-incognia.2"
+      version = "= 1.3.2-incognia.1"
     }
   }
 }
