@@ -44,7 +44,7 @@ jobs:
           yes '' | ssh-keygen -N ''
           ssh-add
       - name: aws configure
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-duration-seconds: 21600
