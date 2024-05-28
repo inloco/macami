@@ -29,6 +29,7 @@ jobs:
           go mod edit -replace github.com/hashicorp/packer=github.com/inloco/packer@v1.8.5-incognia.3
           go get -u -v -x github.com/hashicorp/packer
           cd "$(go env GOMODCACHE)/github.com/inloco/packer@v1.8.5-incognia.3"
+          go install -v -x
       - name: install and setup session-manager-plugin
         run: |
           export SMP_PACKAGE=session-manager-plugin
