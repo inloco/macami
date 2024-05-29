@@ -1,5 +1,5 @@
 packer {
-  required_version = "= v1.8.5-incognia.3"
+  required_version = "= v1.8.6"
 
   required_plugins {
     amazon = {
