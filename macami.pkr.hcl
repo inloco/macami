@@ -1,10 +1,10 @@
 packer {
-  required_version = "=> v1.8.6"
+  required_version = "= v1.8.6"
 
   required_plugins {
     amazon = {
       source  = "github.com/inloco/amazon"
-      version = "=> 1.1.7"
+      version = "= 1.1.7"
     }
   }
 }
