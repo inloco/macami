@@ -33,7 +33,7 @@ jobs:
       - name: install and setup session-manager-plugin
         run: |
           export SMP_PACKAGE=session-manager-plugin
-          export SMP_VERSION=latest
+          export SMP_VERSION=1.2.398.0
           curl -sSLfo "/tmp/${SMP_PACKAGE}.deb" "https://s3.amazonaws.com/session-manager-downloads/plugin/${SMP_VERSION}/ubuntu_64bit/${SMP_PACKAGE}.deb"
           sudo apt-get install -y "/tmp/${SMP_PACKAGE}.deb"
       - name: setup openssh-client
