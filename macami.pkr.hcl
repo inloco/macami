@@ -44,7 +44,7 @@ source "amazon-ebssurrogate" "macami" {
   force_delete_snapshot         = true
   force_deregister              = true
   iam_instance_profile          = "AmazonSSMRoleForInstancesQuickSetup"
-  instance_type                 = "t3a.nano"
+  instance_type                 = "t3a.small"
   pause_before_ssm              = "2m"
   region                        = var.aws_region
   shutdown_behavior             = "terminate"
