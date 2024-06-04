@@ -7,41 +7,41 @@ USRBASE="${VOLBASE}/Users/ec2-user"
 mount -o readwrite /dev/xvdf2 "${VOLBASE}"
 
 /usr/bin/sqlite3 "${VOLBASE}/private/var/db/SystemPolicyConfiguration/KextPolicy" << EOF
-	CREATE TRIGGER IF NOT EXISTS INSERT_OF_allowed_ON_kext_policy AFTER INSERT ON kext_policy FOR EACH ROW WHEN NEW.allowed != 1
-	BEGIN
-		UPDATE kext_policy SET allowed = 1 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
-	END;
+    CREATE TRIGGER IF NOT EXISTS INSERT_OF_allowed_ON_kext_policy AFTER INSERT ON kext_policy FOR EACH ROW WHEN NEW.allowed != 1
+    BEGIN
+        UPDATE kext_policy SET allowed = 1 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
+    END;
 
-	CREATE TRIGGER IF NOT EXISTS UPDATE_OF_allowed_ON_kext_policy AFTER UPDATE OF allowed ON kext_policy FOR EACH ROW WHEN NEW.allowed != 1
-	BEGIN
-		UPDATE kext_policy SET allowed = 1 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
-	END;
+    CREATE TRIGGER IF NOT EXISTS UPDATE_OF_allowed_ON_kext_policy AFTER UPDATE OF allowed ON kext_policy FOR EACH ROW WHEN NEW.allowed != 1
+    BEGIN
+        UPDATE kext_policy SET allowed = 1 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
+    END;
 
-	UPDATE kext_policy SET allowed = 1;
+    UPDATE kext_policy SET allowed = 1;
 
-	CREATE TRIGGER IF NOT EXISTS INSERT_OF_flags_ON_kext_policy AFTER INSERT ON kext_policy FOR EACH ROW WHEN NEW.flags != 0
-	BEGIN
-		UPDATE kext_policy SET flags = 0 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
-	END;
+    CREATE TRIGGER IF NOT EXISTS INSERT_OF_flags_ON_kext_policy AFTER INSERT ON kext_policy FOR EACH ROW WHEN NEW.flags != 0
+    BEGIN
+        UPDATE kext_policy SET flags = 0 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
+    END;
 
-	CREATE TRIGGER IF NOT EXISTS UPDATE_OF_flags_ON_kext_policy AFTER UPDATE OF flags ON kext_policy FOR EACH ROW WHEN NEW.flags != 0
-	BEGIN
-		UPDATE kext_policy SET flags = 0 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
-	END;
+    CREATE TRIGGER IF NOT EXISTS UPDATE_OF_flags_ON_kext_policy AFTER UPDATE OF flags ON kext_policy FOR EACH ROW WHEN NEW.flags != 0
+    BEGIN
+        UPDATE kext_policy SET flags = 0 WHERE team_id = NEW.team_id AND bundle_id = NEW.bundle_id;
+    END;
 
-	UPDATE kext_policy SET flags = 0;
+    UPDATE kext_policy SET flags = 0;
 
-	CREATE TRIGGER IF NOT EXISTS INSERT_OF_flags_ON_kext_load_history_v3 AFTER INSERT ON kext_load_history_v3 FOR EACH ROW WHEN NEW.flags != 16
-	BEGIN
-		UPDATE kext_load_history_v3 SET flags = 16 WHERE path = NEW.path;
-	END;
+    CREATE TRIGGER IF NOT EXISTS INSERT_OF_flags_ON_kext_load_history_v3 AFTER INSERT ON kext_load_history_v3 FOR EACH ROW WHEN NEW.flags != 16
+    BEGIN
+        UPDATE kext_load_history_v3 SET flags = 16 WHERE path = NEW.path;
+    END;
 
-	CREATE TRIGGER IF NOT EXISTS UPDATE_OF_flags_ON_kext_load_history_v3 AFTER UPDATE OF flags ON kext_load_history_v3 FOR EACH ROW WHEN NEW.flags != 16
-	BEGIN
-		UPDATE kext_load_history_v3 SET flags = 16 WHERE path = NEW.path;
-	END;
-	
-	UPDATE kext_load_history_v3 SET flags = 16;
+    CREATE TRIGGER IF NOT EXISTS UPDATE_OF_flags_ON_kext_load_history_v3 AFTER UPDATE OF flags ON kext_load_history_v3 FOR EACH ROW WHEN NEW.flags != 16
+    BEGIN
+        UPDATE kext_load_history_v3 SET flags = 16 WHERE path = NEW.path;
+    END;
+
+    UPDATE kext_load_history_v3 SET flags = 16;
 EOF
 
 TCC='/Library/Application Support/com.apple.TCC/TCC.db'
@@ -55,33 +55,33 @@ CLIENTS1=('/opt/aws/ssm/bin/amazon-ssm-agent' '/usr/libexec/sshd-keygen-wrapper'
 OBJECTS0=('UNUSED' 'com.apple.finder' 'com.apple.systemevents' 'com.vmware.fusion')
 OBJECTS1=()
 {
-	echo 'BEGIN EXCLUSIVE TRANSACTION;'
-	for SERVICE in "${SERVICES[@]}"
-	do
-		for CLIENT in "${CLIENTS0[@]}"
-		do
-			for OBJECT in "${OBJECTS0[@]}"
-			do
-				echo "INSERT INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',0,2,4,1,NULL,NULL,0,'${OBJECT}',NULL,0,0);"
-			done
-			for OBJECT in "${OBJECTS1[@]}"
-			do
-				echo "INSERT INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',0,2,4,1,NULL,NULL,1,'${OBJECT}',NULL,0,0);"
-			done
-		done
-		for CLIENT in "${CLIENTS1[@]}"
-		do
-			for OBJECT in "${OBJECTS0[@]}"
-			do
-				echo "INSERT INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',1,2,4,1,NULL,NULL,0,'${OBJECT}',NULL,0,0);"
-			done
-			for OBJECT in "${OBJECTS1[@]}"
-			do
-				echo "INSERT INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',1,2,4,1,NULL,NULL,1,'${OBJECT}',NULL,0,0);"
-			done
-		done
-	done
-	echo 'COMMIT TRANSACTION;'
+    echo 'BEGIN EXCLUSIVE TRANSACTION;'
+    for SERVICE in "${SERVICES[@]}"
+    do
+        for CLIENT in "${CLIENTS0[@]}"
+        do
+            for OBJECT in "${OBJECTS0[@]}"
+            do
+                echo "INSERT OR REPLACE INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',0,2,4,1,NULL,NULL,0,'${OBJECT}',NULL,0,0);"
+            done
+            for OBJECT in "${OBJECTS1[@]}"
+            do
+                echo "INSERT OR REPLACE INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',0,2,4,1,NULL,NULL,1,'${OBJECT}',NULL,0,0);"
+            done
+        done
+        for CLIENT in "${CLIENTS1[@]}"
+        do
+            for OBJECT in "${OBJECTS0[@]}"
+            do
+                echo "INSERT OR REPLACE INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',1,2,4,1,NULL,NULL,0,'${OBJECT}',NULL,0,0);"
+            done
+            for OBJECT in "${OBJECTS1[@]}"
+            do
+                echo "INSERT OR REPLACE INTO access VALUES ('kTCCService${SERVICE}','${CLIENT}',1,2,4,1,NULL,NULL,1,'${OBJECT}',NULL,0,0);"
+            done
+        done
+    done
+    echo 'COMMIT TRANSACTION;'
 } | /usr/bin/sqlite3 "${TCCVOL}"
 
 mkdir -p "$(dirname "${TCCUSR}")"
