@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+  pull_request:
 permissions:
   contents: read
   id-token: write
@@ -25,9 +26,9 @@ jobs:
         run: |
           cd "$(mktemp -d)"
           go mod init example.com/m
-          go mod edit -replace github.com/hashicorp/packer=github.com/inloco/packer@v1.11.0
+          go mod edit -replace github.com/hashicorp/packer=github.com/inloco/packer@v1.12.0
           go get -v -x github.com/hashicorp/packer
-          cd "$(go env GOMODCACHE)/github.com/inloco/packer@v1.11.0"
+          cd "$(go env GOMODCACHE)/github.com/inloco/packer@v1.12.0"
           go install -v -x
       - name: install and setup session-manager-plugin
         run: |
@@ -43,7 +44,7 @@ jobs:
           yes '' | ssh-keygen -N ''
           ssh-add
       - name: aws configure
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-duration-seconds: 21600
